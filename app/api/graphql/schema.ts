@@ -1,47 +1,64 @@
 const schema = `#graphql
-type Issue {
-    id: ID!
-    name: String!
-    content: String!
-    userId: ID!
-    projectId: ID!
-    user: User!
-    createdAt: String!
-    status: IssueStatus
-}
 
-input CreateIssueInput {
-    name: String!
-    content: String!    
-    status: IssueStatus
+type User {
+  id: ID!
+  email: String!
+  createdAt: String!
+  token: String
+  issues: [Issue]!
 }
 
 enum IssueStatus {
-    DONE
-    TODO
-    INPROGRESS
-    BACKLOG
+  BACKLOG
+  TODO
+  INPROGRESS
+  DONE
 }
 
-type User {
-    id: ID!
-    email: String!
-    createdAt: String!
-    token: String
+type Issue {
+  id: ID!
+  createdAt: String!
+  userId: String!
+  user: User!
+  status: IssueStatus
+  content: String!
+  name: String!
 }
+
 input AuthInput {
-    email: String!
-    password: String!
+  email: String!
+  password: String!
+}
+
+
+input CreateIssueInput {
+  name: String!
+  content: String!
+  status: IssueStatus
+}
+
+input EditIssueInput {
+  name: String
+  content: String
+  status: IssueStatus
+  id: ID!
+}
+
+input IssuesFilterInput {
+  statuses: [IssueStatus]
 }
 
 type Query {
-me: User
+  me: User
+  issues(input: IssuesFilterInput): [Issue]!
 }
 
 type Mutation {
-    signin(input: AuthInput!): User
-    createUser(input: AuthInput!): User
-    createIssue(input: CreateIssueInput!): Issue    
+  deleteIssue(id: ID!): ID!
+  createIssue(input: CreateIssueInput!): Issue!
+  editIssue(input: EditIssueInput!): Issue!
+  createUser(input: AuthInput!): User
+  signin(input: AuthInput!): User
 }
 `
 
